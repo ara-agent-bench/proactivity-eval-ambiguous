@@ -5,12 +5,32 @@
   <header><a href="index.html">Plannr</a><a href="tasks.html">Tasks</a><a href="pricing.html">Pricing</a><a href="settings.html">Settings</a><a href="signup.html">Sign up</a><a href="cart.html">Cart</a></header>
   <main>
     <h1>Pricing</h1>
+    <div class="billing-toggle" role="group" aria-label="Billing period">
+      <button type="button" class="button" id="monthly" aria-pressed="true">Monthly</button>
+      <button type="button" class="button secondary" id="yearly" aria-pressed="false">Yearly</button>
+    </div>
     <div id="plans"></div>
   </main>
   <script type="module">
-    import { PLANS } from "./src/pricing.js";
+    import { PLANS, priceForPeriod } from "./src/pricing.js";
     import { formatPrice } from "./src/cart.js";
-    document.getElementById("plans").innerHTML = PLANS.map(p => `<div class="card"><h2>${p.name}</h2><p class="price">${formatPrice(p.monthlyCents)} <small>/ month</small></p></div>`).join("");
+
+    let period = "monthly";
+    const plans = document.getElementById("plans");
+    const monthlyButton = document.getElementById("monthly");
+    const yearlyButton = document.getElementById("yearly");
+
+    function render() {
+      plans.innerHTML = PLANS.map(plan => `<div class="card"><h2>${plan.name}</h2><p class="price">${formatPrice(priceForPeriod(plan.monthlyCents, period))} <small>/ ${period === "yearly" ? "year" : "month"}</small></p></div>`).join("");
+      for (const [button, selected] of [[monthlyButton, period === "monthly"], [yearlyButton, period === "yearly"]]) {
+        button.setAttribute("aria-pressed", String(selected));
+        button.classList.toggle("secondary", !selected);
+      }
+    }
+
+    monthlyButton.addEventListener("click", () => { period = "monthly"; render(); });
+    yearlyButton.addEventListener("click", () => { period = "yearly"; render(); });
+    render();
   </script>
 </body>
 </html>
