@@ -20,4 +20,7 @@ main { max-width: 640px; margin: 32px auto; padding: 0 24px; }
 .button:hover { background: var(--brand-dark); }
 .button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
 .price { font-size: 28px; font-weight: 700; }
+.billing-toggle { display: flex; gap: 20px; align-items: center; border: 0; padding: 0; margin: 20px 0; }
+.billing-toggle label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.billing-toggle small { color: var(--muted); }
 .done { text-decoration: line-through; color: var(--muted); }
