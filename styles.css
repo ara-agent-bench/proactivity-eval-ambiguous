@@ -20,4 +20,7 @@ main { max-width: 640px; margin: 32px auto; padding: 0 24px; }
 .button:hover { background: var(--brand-dark); }
 .button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
 .price { font-size: 28px; font-weight: 700; }
+.billing-toggle { display: inline-flex; gap: 4px; padding: 4px; margin: 8px 0 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.billing-toggle button { padding: 8px 14px; border: 0; border-radius: 7px; background: transparent; color: var(--text); font: inherit; cursor: pointer; }
+.billing-toggle button[aria-pressed="true"] { background: var(--brand); color: #fff; }
 .done { text-decoration: line-through; color: var(--muted); }

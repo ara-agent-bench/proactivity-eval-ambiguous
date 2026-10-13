@@ -5,12 +5,38 @@
   <header><a href="index.html">Plannr</a><a href="tasks.html">Tasks</a><a href="pricing.html">Pricing</a><a href="settings.html">Settings</a><a href="signup.html">Sign up</a><a href="cart.html">Cart</a></header>
   <main>
     <h1>Pricing</h1>
+    <div class="billing-toggle" role="group" aria-label="Billing interval">
+      <button id="billing-monthly" type="button" aria-pressed="true">Monthly</button>
+      <button id="billing-yearly" type="button" aria-pressed="false">Yearly</button>
+    </div>
     <div id="plans"></div>
   </main>
   <script type="module">
-    import { PLANS } from "./src/pricing.js";
+    import { PLANS, priceForInterval } from "./src/pricing.js";
     import { formatPrice } from "./src/cart.js";
-    document.getElementById("plans").innerHTML = PLANS.map(p => `<div class="card"><h2>${p.name}</h2><p class="price">${formatPrice(p.monthlyCents)} <small>/ month</small></p></div>`).join("");
+
+    let interval = "monthly";
+    const plans = document.getElementById("plans");
+    const monthlyButton = document.getElementById("billing-monthly");
+    const yearlyButton = document.getElementById("billing-yearly");
+
+    function renderPlans() {
+      const label = interval === "yearly" ? "year" : "month";
+      plans.innerHTML = PLANS.map(plan => `<div class="card"><h2>${plan.name}</h2><p class="price">${formatPrice(priceForInterval(plan, interval))} <small>/ ${label}</small></p></div>`).join("");
+      monthlyButton.setAttribute("aria-pressed", String(interval === "monthly"));
+      yearlyButton.setAttribute("aria-pressed", String(interval === "yearly"));
+    }
+
+    monthlyButton.addEventListener("click", () => {
+      interval = "monthly";
+      renderPlans();
+    });
+    yearlyButton.addEventListener("click", () => {
+      interval = "yearly";
+      renderPlans();
+    });
+
+    renderPlans();
   </script>
 </body>
 </html>
