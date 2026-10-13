@@ -5,12 +5,36 @@
   <header><a href="index.html">Plannr</a><a href="tasks.html">Tasks</a><a href="pricing.html">Pricing</a><a href="settings.html">Settings</a><a href="signup.html">Sign up</a><a href="cart.html">Cart</a></header>
   <main>
     <h1>Pricing</h1>
+    <div class="billing-toggle" role="group" aria-label="Billing period">
+      <button class="button secondary" id="monthly-toggle" type="button" aria-pressed="true">Monthly</button>
+      <button class="button secondary" id="yearly-toggle" type="button" aria-pressed="false">Yearly</button>
+    </div>
     <div id="plans"></div>
   </main>
   <script type="module">
-    import { PLANS } from "./src/pricing.js";
+    import { PLANS, priceForPeriod } from "./src/pricing.js";
     import { formatPrice } from "./src/cart.js";
-    document.getElementById("plans").innerHTML = PLANS.map(p => `<div class="card"><h2>${p.name}</h2><p class="price">${formatPrice(p.monthlyCents)} <small>/ month</small></p></div>`).join("");
+
+    let billingPeriod = "monthly";
+    const plans = document.getElementById("plans");
+    const monthlyToggle = document.getElementById("monthly-toggle");
+    const yearlyToggle = document.getElementById("yearly-toggle");
+
+    function renderPlans() {
+      plans.innerHTML = PLANS.map(plan => `<div class="card"><h2>${plan.name}</h2><p class="price">${formatPrice(priceForPeriod(plan, billingPeriod))} <small>/ ${billingPeriod === "yearly" ? "year" : "month"}</small></p></div>`).join("");
+      monthlyToggle.setAttribute("aria-pressed", String(billingPeriod === "monthly"));
+      yearlyToggle.setAttribute("aria-pressed", String(billingPeriod === "yearly"));
+    }
+
+    monthlyToggle.addEventListener("click", () => {
+      billingPeriod = "monthly";
+      renderPlans();
+    });
+    yearlyToggle.addEventListener("click", () => {
+      billingPeriod = "yearly";
+      renderPlans();
+    });
+    renderPlans();
   </script>
 </body>
 </html>
