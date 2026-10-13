@@ -5,12 +5,26 @@
   <header><a href="index.html">Plannr</a><a href="tasks.html">Tasks</a><a href="pricing.html">Pricing</a><a href="settings.html">Settings</a><a href="signup.html">Sign up</a><a href="cart.html">Cart</a></header>
   <main>
     <h1>Pricing</h1>
-    <div id="plans"></div>
+    <fieldset class="billing-toggle" aria-label="Billing period">
+      <legend>Billing period</legend>
+      <label><input type="radio" name="billingPeriod" value="monthly" checked> Monthly</label>
+      <label><input type="radio" name="billingPeriod" value="yearly"> Yearly</label>
+    </fieldset>
+    <div id="plans" aria-live="polite"></div>
   </main>
   <script type="module">
     import { PLANS } from "./src/pricing.js";
     import { formatPrice } from "./src/cart.js";
-    document.getElementById("plans").innerHTML = PLANS.map(p => `<div class="card"><h2>${p.name}</h2><p class="price">${formatPrice(p.monthlyCents)} <small>/ month</small></p></div>`).join("");
+    const plans = document.getElementById("plans");
+    function renderPlans(period) {
+      const multiplier = period === "yearly" ? 10 : 1;
+      const label = period === "yearly" ? "year" : "month";
+      plans.innerHTML = PLANS.map(p => `<div class="card"><h2>${p.name}</h2><p class="price">${formatPrice(p.monthlyCents * multiplier)} <small>/ ${label}</small></p></div>`).join("");
+    }
+    document.querySelectorAll('input[name="billingPeriod"]').forEach(input => {
+      input.addEventListener("change", () => renderPlans(input.value));
+    });
+    renderPlans("monthly");
   </script>
 </body>
 </html>
